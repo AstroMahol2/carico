@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#0b0c0d"/>
+  <g transform="translate(0 -40)">
+  <!-- manubrio -->
+  <g fill="#30d158">
+    <rect x="300" y="250" width="58" height="260" rx="22"/>
+    <rect x="666" y="250" width="58" height="260" rx="22"/>
+    <rect x="220" y="310" width="54" height="140" rx="20"/>
+    <rect x="750" y="310" width="54" height="140" rx="20"/>
+    <rect x="358" y="360" width="308" height="40" rx="8"/>
+  </g>
+  <text x="512" y="745" text-anchor="middle" font-family="Arial Black, Arial" font-weight="900" font-size="184" letter-spacing="-4" fill="#ffffff">BEAST</text>
+  <text x="520" y="858" text-anchor="middle" font-family="Bahnschrift, Arial" font-weight="700" font-size="104" letter-spacing="34" fill="#30d158">TRACK</text>
+  </g>
+</svg>
