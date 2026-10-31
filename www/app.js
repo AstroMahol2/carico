@@ -760,4 +760,7 @@ ACTIONS.back = () => {
   await load();
   render();
   if (Plugins.StatusBar) Plugins.StatusBar.setStyle({ style: 'DEFAULT' }).catch(() => {});
+  if (!native && 'serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  // Safari: chiede di non cancellare i dati della web app
+  if (!native && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 })();
