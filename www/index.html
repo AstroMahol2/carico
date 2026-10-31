@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#000000">
+  <title>Beast Track</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <main id="view"></main>
+    <button id="resume" class="resume" hidden></button>
+    <nav class="tabbar" id="tabbar">
+      <button data-tab="workout"><span class="ico" data-icon="dumbbell"></span><span>Allenamento</span></button>
+      <button data-tab="library"><span class="ico" data-icon="list"></span><span>Esercizi</span></button>
+      <button data-tab="history"><span class="ico" data-icon="clock"></span><span>Storico</span></button>
+    </nav>
+  </div>
+  <section id="session" class="cover" hidden></section>
+  <div id="sheet-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="capacitor.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
