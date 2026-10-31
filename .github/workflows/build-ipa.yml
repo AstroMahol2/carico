@@ -1,0 +1,55 @@
+# Compila BeastTrack.ipa NON firmato su un Mac di GitHub.
+# Lo firmi tu con Sideloadly (Apple ID gratuito) e lo installi via cavo.
+name: Build IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ipa:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Dipendenze
+        run: npm install --no-audit --no-fund
+
+      - name: Runtime Capacitor nel web
+        run: cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js
+
+      - name: Progetto iOS
+        run: |
+          npx cap add ios
+          [ -f assets/icon-only.png ] || node -e "require('sharp')('assets/icon.svg').flatten({background:'#0b0c0d'}).resize(1024,1024).png().toFile('assets/icon-only.png').then(()=>console.log('icon ok'))"
+          npx capacitor-assets generate --ios --iconBackgroundColor '#0b0c0d' --splashBackgroundColor '#000000' --splashBackgroundColorDark '#000000' || echo "assets: uso icone di default"
+          npx cap sync ios
+
+      - name: Solo verticale, stile scuro della status bar automatico
+        run: |
+          P=ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Delete :UISupportedInterfaceOrientations" $P || true
+          /usr/libexec/PlistBuddy -c "Add :UISupportedInterfaceOrientations array" -c "Add :UISupportedInterfaceOrientations:0 string UIInterfaceOrientationPortrait" $P
+          /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName 'Beast Track'" $P || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string 'Beast Track'" $P
+
+      - name: Compila (senza firma)
+        working-directory: ios/App
+        run: |
+          if [ -d App.xcworkspace ]; then T="-workspace App.xcworkspace"; else T="-project App.xcodeproj"; fi
+          xcodebuild $T -scheme App -configuration Release -sdk iphoneos \
+            -destination 'generic/platform=iOS' -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -qry "$GITHUB_WORKSPACE/BeastTrack.ipa" Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: BeastTrack-ipa
+          path: BeastTrack.ipa
+          retention-days: 30
